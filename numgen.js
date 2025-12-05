@@ -10,11 +10,14 @@ const numgen = ((Nums) => {
 		if (typeof num !== "number")
 			return ""
 
+        if (num === 0)
+            return `(1-1)`
+
 		if (num === Infinity || Number.isNaN(num))
 			return `QwQ, ${num}需要用到我们不知道的黑魔法诶`
 
 		if (num < 0)
-			return `(⑨)*(${demolish(num * -1)})`.replace(/\*\(1\)/g, "")
+			return `(-1)*(${demolish(num * -1)})`.replace(/\*\(1\)/g, "")
 
 		if (!Number.isInteger(num)) {
 			// abs(num) is definitely smaller than 2**51
@@ -32,7 +35,9 @@ const numgen = ((Nums) => {
 	}
 	//Finisher
 	const finisher = (expr) => {
-		expr = expr.replace(/\d+|⑨/g, (n) => Nums[n]).replace("^", "**")
+		expr = expr
+			.replace(/\d+|⑨/g, (n) => Nums[n] ?? n)
+			.replace("^", "**")
 		//As long as it matches ([\*|\/])\(([^\+\-\(\)]+)\), replace it with $1$2
 		while (expr.match(/[\*|\/]\([^\+\-\(\)]+\)/))
 			expr = expr.replace(/([\*|\/])\(([^\+\-\(\)]+)\)/, (m, $1, $2) => $1 + $2)
@@ -51,7 +56,6 @@ const numgen = ((Nums) => {
 	}
 	return (num) => finisher(demolish(num))
 })({
-	
     1: "((65-((12+3)*4))/5)",
     2: "((65-1)/((23+4)+5))",
     3: "((65+1)/((23+4)-5))",
